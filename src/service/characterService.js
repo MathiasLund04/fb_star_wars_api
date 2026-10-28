@@ -1,81 +1,86 @@
-// Holder styr på det næste ledige id:
-let nextId = 5;
-
-// Startdata med 4 karakterer:
-let characters = [
-    { id: 1, name: "Luke Skywalker", rank: "Jedi", homeworld: "Tatooine" },
-    { id: 2, name: "Leia Organa", rank: "Officer", homeworld: "Alderaan" },
-    { id: 3, name: "Han Solo", rank: "Smuggler", homeworld: "Corellia" },
-    { id: 4, name: "Chewbacca", rank: "Wookiee", homeworld: "Kashyyyk" }
-];
+const crypto = require('crypto');
+const fs = require('fs-extra');
+const path = require('path');
+const characterService = require("./characterService");
+const characterPath = path.join(__dirname,`../data/characters.json`);
 
 // Henter alle karakterer:
-const getAllCharacters = () => {
-    return characters;
-};
+async function getAllCharacters(){
+    return await fs.readJson(characterPath);
+}
 
 // Henter en karakter baseret på deres id:
-const getCharacterById = (id) => {
-    return characters.find(c => c.id === id);
-};
+async function getCharacterById(id){
+    try {
+        const characters = await getAllCharacters();
+        const foundCharacter = characters.find(c => c.id === id);
+        return await foundCharacter;
+    }catch(err){
+        throw err;
+    }
+}
 
 // Tilføjer den nyoprettede karakter:
-const createCharacter = (name, rank, homeworld) => {
+async function createCharacter(character){
     const newCharacter = {
-        id: nextId++,
-        name,
-        rank,
-        homeworld
+        id: crypto.randomUUID(),
+        name: character.name.trim(),
+        role: character.role.trim(),
+        homeworld: character.homeworld.trim(),
     };
-
-    // Tilføjer karakteren til array'et:
-    characters.push(newCharacter);
-
-    // Returner den oprettede karakter:
-    return newCharacter;
-};
+    try{
+        const characters = await getAllCharacters();
+        characters.push(newCharacter);
+        return await fs.writeJson(characterPath, characters, {spaces: 2});
+    } catch(err){
+       throw err;
+    }
+}
 
 // Opdaterer en eksisterende karakter:
-const updateCharacter = (id, name, rank, homeworld) => {
+    async function updateCharacter (id, newCharacter){
+       try {
+           const characters = await getAllCharacters();
+           // Finder karakteren ud fra id:
+           let character = characters.find(c => c.id === id);
+           // Returnerer null hvis karakteren ikke findes:
+           if (!character) {
+               return null;
+           }
+           // Opdaterer karakterens oplysninger:
+           character = {
+               id: id,
+               name: newCharacter.name.trim(),
+               role: newCharacter.role.trim(),
+               homeworld: newCharacter.homeworld.trim(),
+           };
+           const updatedCharacters = characters.filter(c => c.id !== id);
+           updatedCharacters.push(character);
 
-    // Finder karakteren ud fra id:
-    const character = characters.find(
-        character => character.id === id
-    );
+           await fs.writeJson(characterPath, updatedCharacters, {spaces: 2});
 
-    // Returnerer null hvis karakteren ikke findes:
-    if (!character) {
-        return null;
-    }
-
-    // Opdaterer karakterens oplysninger:
-    character.name = name;
-    character.rank = rank;
-    character.homeworld = homeworld;
-
-    // Returnerer den opdaterede karakter:
-    return character;
+           // Returnerer den opdaterede karakter:
+           return character;
+       } catch(err){
+           throw err;
+       }
 };
 
 // Sletter en karakter:
-const deleteCharacter = (id) => {
+async function deleteCharacter (id) {
+    try {
+        const characters = await getAllCharacters();
+        const updatedCharList = characters.filter(c => c.id !== id);
 
-    // Finder karakterens placering i array'et:
-    const index = characters.findIndex(
-        character => character.id === id
-    );
+        if (updatedCharList.length === characters.length) {
+            new Error(`No characters found.`);
+        }
 
-    // Returnerer false hvis karakteren ikke findes:
-    if (index === -1) {
-        return false;
+        await fs.writeJson(characterPath, updatedCharList, {spaces: 2});
+    }catch(err){
+        throw err;
     }
-
-    // Fjerner karakteren fra array'et:
-    characters.splice(index, 1);
-
-    // Returnerer true hvis karakteren blev slettet:
-    return true;
-};
+}
 
 // Eksporter funktionerne, så de kan bruges i andre filer:
 module.exports = {
