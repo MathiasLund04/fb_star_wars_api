@@ -9,8 +9,7 @@ const getAllCharacters = (req, res) => {
 };
 
 // Returnerer en karakter ud fra et id:
-const getCharacterById = (req, res,next) => {
-
+const getCharacterById = (req, res) => {
         const id = parseInt(req.params.id);
 
         // Henter en karakter fra servicen:
