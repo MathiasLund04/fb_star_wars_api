@@ -1,5 +1,5 @@
 
-const characterService = require("../services/characterService");
+const characterService = require("../service/characterService");
 
 // Returnerer alle karakterer:
 const getAllCharacters = (req, res) => {
@@ -9,22 +9,24 @@ const getAllCharacters = (req, res) => {
 };
 
 // Returnerer en karakter ud fra et id:
-const getCharacterById = (req, res) => {
-    const id = parseInt(req.params.id);
+const getCharacterById = (req, res,next) => {
 
-    // Henter en karakter fra servicen:
-    const character =
-        characterService.getCharacterById(id);
+        const id = parseInt(req.params.id);
 
-    // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
-    if (!character) {
-        return res.status(404).json({
-            error: "Karakter ikke fundet"
-        });
-    }
+        // Henter en karakter fra servicen:
+        const character =
+            characterService.getCharacterById(id);
 
-    // Returnere den fundne karakter:
-    res.json(character);
+        // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
+        if (!character) {
+            return res.status(404).json({
+                error: "Karakter ikke fundet"
+            });
+        }
+
+        // Returnere den fundne karakter:
+        res.json(character);
+
 };
 
 // Opretter en ny karakter:
