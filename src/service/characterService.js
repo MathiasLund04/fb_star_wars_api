@@ -31,7 +31,7 @@ async function createCharacter(character){
     try{
         const characters = await getAllCharacters();
         characters.push(newCharacter);
-        return await fs.writeJson(characterPath, characters, {spaces: 2});
+        await fs.writeJson(characterPath, characters, {spaces: 2});
     } catch(err){
        throw err;
     }

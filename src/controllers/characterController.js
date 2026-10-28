@@ -72,10 +72,9 @@ const createCharacter = (req, res,next) => {
 
        // Opretter den nye karakter:
        const newCharacter =
-           characterService.createCharacter(character);
-
-       // Returnerer den oprettede karakter med status 201 (Created):
-       res.status(201).json(newCharacter);
+           characterService.createCharacter(character)
+               .then(newCharacter => res.status(201).json(newCharacter))
+               .catch(next);
    }catch(err) {
        next(err)
    }
