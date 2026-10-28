@@ -7,10 +7,11 @@ const {
     errorHandler
 } = require('./middleware/middleware');
 
-app.use(express.json());
 
 //Logger alle requests
 app.use(requestLogger);
+
+app.use(express.json());
 
 app.use('/', routes);
 
@@ -18,6 +19,5 @@ app.use('/', routes);
 app.use(notFoundHandler);
 //Håndtere fejl fra routes og middleware
 app.use(errorHandler);
-
 
 module.exports = app;
