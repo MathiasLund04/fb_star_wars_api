@@ -1,3 +1,8 @@
+const path = require("node:path");
+const filePath = path.join(
+    __dirname,
+    "../../files/rebel-alliance.txt"
+);
 
 const characterService = require("../service/characterService");
 
@@ -127,6 +132,27 @@ const deleteCharacter = (req, res) => {
     res.status(204).send();
 };
 
+//downloader txt filen
+const downloadFile = (req, res) => {
+    res.download(filePath, "rebel-alliance.txt", (error) => {
+        //Hvis der sker fejl undervejs vises dette i konsollen
+        if (error) {
+            console.log(error);
+
+            //For at vise fejl til bruger hvis der ikke sker noget
+            if (!res.headersSent) {
+                res.status(500).send("Kunne ikke hente filen");
+            }
+        }
+
+    });
+}
+
+//redirecter til characters/1 (eller Lukes id i dette tilfælde)
+const goToLuke = (req, res) => {
+    res.redirect("/characters/1");
+}
+
 
 // Eksporter funktionerne, så de kan bruges i andre filer:
 module.exports = {
@@ -134,5 +160,7 @@ module.exports = {
     getCharacterById,
     createCharacter,
     updateCharacter,
-    deleteCharacter
+    deleteCharacter,
+    downloadFile,
+    goToLuke
 };

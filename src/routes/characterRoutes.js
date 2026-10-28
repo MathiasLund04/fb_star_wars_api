@@ -35,6 +35,18 @@ router.delete(
     characterController.deleteCharacter
 );
 
+//Route til at downloade rebel-alliance.txt
+router.get(
+    "/download",
+    characterController.downloadFile
+);
+
+//Redirecting route
+router.get(
+    "/go-to-luke",
+    characterController.goToLuke
+);
+
 
 
 
