@@ -3,13 +3,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const characterService = require("./characterService");
 const characterPath = path.join(__dirname,`../data/characters.json`);
-let mutationQueue = Promise.resolve();
-
-function withMutationLock(mutation) {
-    const result = mutationQueue.then(mutation);
-    mutationQueue = result.catch(() => {});
-    return result;
-}
 
 // Henter alle karakterer:
 async function getAllCharacters(){
@@ -35,64 +28,58 @@ async function createCharacter(character){
         role: character.role.trim(),
         homeworld: character.homeworld.trim(),
     };
-    return withMutationLock(async () => {
-        try{
-            const characters = await getAllCharacters();
-            characters.push(newCharacter);
-            return await fs.writeJson(characterPath, characters, {spaces: 2});
-        } catch(err){
-           throw err;
-        }
-    });
+    try{
+        const characters = await getAllCharacters();
+        characters.push(newCharacter);
+        return await fs.writeJson(characterPath, characters, {spaces: 2});
+    } catch(err){
+       throw err;
+    }
 }
 
 // Opdaterer en eksisterende karakter:
     async function updateCharacter (id, newCharacter){
-       return withMutationLock(async () => {
-           try {
-               const characters = await getAllCharacters();
-               // Finder karakteren ud fra id:
-               let character = characters.find(c => c.id === id);
-               // Returnerer null hvis karakteren ikke findes:
-               if (!character) {
-                   return null;
-               }
-               // Opdaterer karakterens oplysninger:
-               character = {
-                   id: id,
-                   name: newCharacter.name.trim(),
-                   role: newCharacter.role.trim(),
-                   homeworld: newCharacter.homeworld.trim(),
-               };
-               const updatedCharacters = characters.filter(c => c.id !== id);
-               updatedCharacters.push(character);
-
-               await fs.writeJson(characterPath, updatedCharacters, {spaces: 2});
-
-               // Returnerer den opdaterede karakter:
-               return character;
-           } catch(err){
-               throw err;
+       try {
+           const characters = await getAllCharacters();
+           // Finder karakteren ud fra id:
+           let character = characters.find(c => c.id === id);
+           // Returnerer null hvis karakteren ikke findes:
+           if (!character) {
+               return null;
            }
-       });
+           // Opdaterer karakterens oplysninger:
+           character = {
+               id: id,
+               name: newCharacter.name.trim(),
+               role: newCharacter.role.trim(),
+               homeworld: newCharacter.homeworld.trim(),
+           };
+           const updatedCharacters = characters.filter(c => c.id !== id);
+           updatedCharacters.push(character);
+
+           await fs.writeJson(characterPath, updatedCharacters, {spaces: 2});
+
+           // Returnerer den opdaterede karakter:
+           return character;
+       } catch(err){
+           throw err;
+       }
 };
 
 // Sletter en karakter:
 async function deleteCharacter (id) {
-    return withMutationLock(async () => {
-        try {
-            const characters = await getAllCharacters();
-            const updatedCharList = characters.filter(c => c.id !== id);
+    try {
+        const characters = await getAllCharacters();
+        const updatedCharList = characters.filter(c => c.id !== id);
 
-            if (updatedCharList.length === characters.length) {
-                new Error(`No characters found.`);
-            }
-
-            await fs.writeJson(characterPath, updatedCharList, {spaces: 2});
-        }catch(err){
-            throw err;
+        if (updatedCharList.length === characters.length) {
+            new Error(`No characters found.`);
         }
-    });
+
+        await fs.writeJson(characterPath, updatedCharList, {spaces: 2});
+    }catch(err){
+        throw err;
+    }
 }
 
 // Eksporter funktionerne, så de kan bruges i andre filer:

@@ -18,7 +18,6 @@ const getAllCharacters = async (req, res) => {
             error: err,
         })
     }
-
 };
 
 // Returnerer en karakter ud fra et id:
