@@ -4,7 +4,6 @@ const filePath = path.join(
     "../../files/rebel-alliance.txt"
 );
 
-
 const characterService = require("../service/characterService");
 
 // Returnerer alle karakterer:
@@ -16,21 +15,22 @@ const getAllCharacters = (req, res) => {
 
 // Returnerer en karakter ud fra et id:
 const getCharacterById = (req, res) => {
-    const id = parseInt(req.params.id);
+        const id = parseInt(req.params.id);
 
-    // Henter en karakter fra servicen:
-    const character =
-        characterService.getCharacterById(id);
+        // Henter en karakter fra servicen:
+        const character =
+            characterService.getCharacterById(id);
 
-    // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
-    if (!character) {
-        return res.status(404).json({
-            error: "Karakter ikke fundet"
-        });
-    }
+        // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
+        if (!character) {
+            return res.status(404).json({
+                error: "Karakter ikke fundet"
+            });
+        }
 
-    // Returnere den fundne karakter:
-    res.json(character);
+        // Returnere den fundne karakter:
+        res.json(character);
+
 };
 
 // Opretter en ny karakter:
