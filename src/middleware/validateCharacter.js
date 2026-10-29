@@ -34,6 +34,7 @@ const validateCharacterMiddleware = (req,res,next) =>{
       return res.status(400).json({ errors: "Validering fejlede", details: errors});
   }
   req.validated = value;
+  req.body = value;
   next();
 };
 

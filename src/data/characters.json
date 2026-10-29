@@ -46,5 +46,11 @@
     "name": "Chewbacca",
     "role": "Smuggler",
     "homeworld": "Kashyyyk"
+  },
+  {
+    "id": "f40042cd-7d91-4473-9905-f917cb836fb8",
+    "name": "glup shitto",
+    "role": "Rebel",
+    "homeworld": "felucia"
   }
 ]
