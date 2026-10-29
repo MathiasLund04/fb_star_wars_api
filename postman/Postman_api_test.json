@@ -1,0 +1,416 @@
+{
+  "info": {
+    "_postman_id": "4f1d14dc-69df-495c-bf1e-1b87994613d6",
+    "name": "Star_wars_api Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58677652",
+    "_collection_link": "https://go.postman.co/collection/58677652-4f1d14dc-69df-495c-bf1e-1b87994613d6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get all",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "   pm.test(\"Henter alle karakterer med status 200\", () => {\r\n       pm.response.to.have.status(200);\r\n       pm.expect(pm.response.json()).to.be.an(\"array\");\r\n   });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Existing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "   pm.test(\"Henter en eksisterende karakter\", () => {\r\n       pm.response.to.have.status(200);\r\n       pm.expect(pm.response.json().name).to.eql(\"Luke Skywalker\");\r\n   });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters/8ab3847c-9aa0-46d4-a9b2-4bde5a137455",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters",
+            "8ab3847c-9aa0-46d4-a9b2-4bde5a137455"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Unknown",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Ukendt karakter giver 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Valid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Gyldig karakter bliver oprettet\", () => {\r\n    pm.response.to.have.status(201);\r\n\r\n    const character = pm.response.json();\r\n    pm.expect(character).to.have.property(\"id\");\r\n    pm.expect(character.name).to.eql(\"Postman Test\");\r\n\r\n    pm.collectionVariables.set(\"testCharacterId\", character.id);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Postman Test\",\n  \"role\": \"Jedi\",\n  \"homeworld\": \"Tatooine\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Characters",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Characters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create no name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Manglende navn giver 400\", () => {\r\n    pm.response.to.have.status(400);\r\n    pm.expect(pm.response.json()).to.have.property(\"details\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"role\": \"Jedi\",\r\n  \"homeworld\": \"Tatooine\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/characters",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "characters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create no role",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Ugyldig rolle giver 400\", () => {\r\n    pm.response.to.have.status(400);\r\n    pm.expect(pm.response.json()).to.have.property(\"details\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Postman Test\",\r\n  \"role\": \"Unknown\",\r\n  \"homeworld\": \"Tatooine\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/characters",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "characters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create no planet",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Manglende planet giver 400\", () => {\r\n    pm.response.to.have.status(400);\r\n    pm.expect(pm.response.json()).to.have.property(\"details\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Postman Test\",\r\n  \"role\": \"Jedi\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update existing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Eksisterende karakter bliver opdateret\", () => {\r\n    pm.response.to.have.status(200);\r\n    pm.expect(pm.response.json().name).to.eql(\"Postman Test opdateret\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Postman Test opdateret\",\r\n  \"role\": \"Rebel\",\r\n  \"homeworld\": \"Alderaan\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters/{{testCharacterId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters",
+            "{{testCharacterId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update unknown",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Opdatering af ukendt karakter giver 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Postman Test opdateret\",\r\n  \"role\": \"Rebel\",\r\n  \"homeworld\": \"Alderaan\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/characters/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "characters",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete existing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Eksisterende karakter bliver slettet\", () => {\r\n    pm.response.to.have.status(204);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/Characters/{{testCharacterId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Characters",
+            "{{testCharacterId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete unknown",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Sletning af ukendt karakter giver 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/Characters/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Characters",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "testCharacterId",
+      "value": ""
+    }
+  ]
+}

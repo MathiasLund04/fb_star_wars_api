@@ -12,12 +12,6 @@
     "homeworld": "Tatooine"
   },
   {
-    "id": "cd99531c-e2f2-49f6-90e4-4f4410681b62",
-    "name": "Han Solo",
-    "role": "Smuggler",
-    "homeworld": "Corellia"
-  },
-  {
     "id": "2b58b4d1-d374-449e-a86e-3b0f9d8f064c",
     "name": "Darth Vader",
     "role": "Sith",
@@ -48,9 +42,21 @@
     "homeworld": "Kashyyyk"
   },
   {
-    "id": "f40042cd-7d91-4473-9905-f917cb836fb8",
-    "name": "glup shitto",
-    "role": "Rebel",
-    "homeworld": "felucia"
+    "id": "d568262d-2a46-40b9-adbe-8cabc813f04f",
+    "name": "Biddy blas",
+    "role": "Smuggler",
+    "homeworld": "Croce"
+  },
+  {
+    "id": "cd99531c-e2f2-49f6-90e4-4f4410681b62",
+    "name": "Han Solo",
+    "role": "Smuggler",
+    "homeworld": "Corellia"
+  },
+  {
+    "id": "e7d2aa8a-f769-4e54-b32b-46bc051f3163",
+    "name": "Hondo Ohnaka",
+    "role": "Smuggler",
+    "homeworld": "Florum"
   }
 ]

@@ -1,5 +1,16 @@
 const characterList = document.getElementById('character-list');
 
+// Udtrækker fejlbesked fra serverens middleware (validateCharacter, notFoundHandler, errorHandler)
+async function getErrorMessage(response, fallback) {
+    const data = await response.json().catch(() => ({}));
+
+    if (Array.isArray(data.details) && data.details.length > 0) {
+        return data.details.join('\n');
+    }
+
+    return data.error || (typeof data.errors === 'string' ? data.errors : null) || fallback;
+}
+
 async function hentCharacters() {
     try {
         const response = await fetch('/characters');
@@ -60,12 +71,12 @@ async function deleteCharacter(id) {
         });
 
         if (!response.ok) {
-            throw new Error('Karakteren kunne ikke slettes');
+            throw new Error(await getErrorMessage(response, 'Karakteren kunne ikke slettes'));
         }
 
         await hentCharacters();
     } catch (error) {
-        console.error(error);
+        alert(error.message);
     }
 }
 
@@ -93,8 +104,7 @@ if (createForm) {
             });
 
             if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                throw new Error(data.error || 'Kunne ikke oprette karakteren');
+                throw new Error(await getErrorMessage(response, 'Kunne ikke oprette karakteren'));
             }
 
             window.location.href = '/';
@@ -150,9 +160,7 @@ if (updateForm) {
             });
 
             if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                throw new Error(data.error || 'Kunne ikke opdatere karakteren');
-            }
+                throw new Error(await getErrorMessage(response, 'Kunne ikke opdatere karakteren'));            }
 
             window.location.href = '/';
         } catch (error) {
