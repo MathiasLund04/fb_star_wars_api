@@ -152,5 +152,5 @@ if (updateForm) {
 }
 
 if (characterList) {
-    hentCharacters().then(r => {}).catch(error => console.error('Error fetching characters:', error));
+    hentCharacters().then(() => {}).catch(error => console.error('Error fetching characters:', error));
 }
