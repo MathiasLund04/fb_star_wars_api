@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+    --space: #05060f;
+    --panel: #0d1224;
+    --yellow: #ffe81f;
+    --blue: #4bd5ee;
+    --red: #ff3b3b;
+    --text: #d8def0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    text-align: center;
+    background-color: var(--space);
+    background-image:
+            radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+            radial-gradient(1px 1px at 120px 80px, #fff, transparent),
+            radial-gradient(2px 2px at 200px 150px, #cfe8ff, transparent),
+            radial-gradient(1px 1px at 300px 40px, #fff, transparent),
+            radial-gradient(1px 1px at 80px 190px, #fff, transparent);
+    background-size: 320px 220px;
+}
+
+h1 {
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 12px rgba(255, 232, 31, 0.6);
+    margin-bottom: 2rem;
+}
+
+/* Formularer */
+form {
+    max-width: 420px;
+    margin: 0 auto 2rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+    background: var(--panel);
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    box-shadow: 0 0 18px rgba(75, 213, 238, 0.3);
+}
+
+#form {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    align-items: center;
+}
+
+label {
+    color: var(--blue);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+input {
+    padding: 0.7rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #050816;
+    border: 1px solid #2a3558;
+    border-radius: 4px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 8px var(--blue);
+}
+
+/* Knapper */
+button {
+    padding: 0.7rem 1.4rem;
+    font-family: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--yellow);
+    background: transparent;
+    border: 2px solid var(--yellow);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    color: #000;
+    background: var(--yellow);
+    box-shadow: 0 0 15px var(--yellow);
+}
+
+button.delete,
+.delete {
+    color: var(--red);
+    border-color: var(--red);
+}
+
+button.delete:hover,
+.delete:hover {
+    color: #fff;
+    background: var(--red);
+    box-shadow: 0 0 15px var(--red);
+}
+
+/* Karakterliste */
+#character-list {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#character-list > * {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    background: var(--panel);
+    border-left: 4px solid var(--yellow);
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+#character-list > *:hover {
+    box-shadow: 0 0 16px rgba(255, 232, 31, 0.35);
+}
+
+#character-list button {
+    margin: 0.5rem 0.5rem 0 0;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+}
+
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.popup-overlay[hidden] {
+    display: none;
+}
+
+.popup {
+    position: relative;
+    width: min(600px, 100%);
+    padding: 2rem;
+    text-align: left;
+    background: var(--panel);
+    border: 2px solid var(--yellow);
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(255, 232, 31, 0.5);
+}
+
+.popup pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font: inherit;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.popup-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    padding: 0;
+    border: none;
+    color: var(--yellow);
+    font-size: 2rem;
+}

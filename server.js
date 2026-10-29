@@ -1,5 +1,5 @@
 const app = require('./src/app');
 
-app.listen(3000, () =>{
-    console.log('Server started on port 3000');
-})
+app.listen(3000, () => {
+    console.log(`Serveren kører på http://localhost:${3000}`);
+});
