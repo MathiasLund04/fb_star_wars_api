@@ -136,23 +136,28 @@ if (updateForm) {
         const role = document.getElementById('role').value.trim();
         const homeworld = document.getElementById('homeworld').value.trim();
 
-        const response = await fetch(`/characters/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name,
-                role,
-                homeworld
-            })
-        });
+        try {
+            const response = await fetch(`/characters/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    role,
+                    homeworld
+                })
+            });
 
-        if (!response.ok) {
-            throw new Error('Kunne ikke opdatere karakteren');
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.error || 'Kunne ikke opdatere karakteren');
+            }
+
+            window.location.href = '/';
+        } catch (error) {
+            alert(error.message);
         }
-
-        window.location.href = '/';
     });
 }
 
