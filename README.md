@@ -27,17 +27,8 @@ For at bruge programmet, skal man starte servern i server.js. Derefter kan man b
 
 ### Arkitektur og ansvar
 Til vores projekt har vi valgt at bygge strukturen op med Model-View-Controller (MVC):
-projektmappe/
-├── files/              # statiske filer (fx .txt)
-├── src/
-│   ├── controllers/     # forretningslogik i Service
-│   ├── routes/          # ruter
-│   ├── public/           # HTML-filer
-│   ├── middleware/      # logning, validering
-│   ├── data/      # værdier der gemmes, modeller
-│   └── app.js           # Express-app
-├── server.js            # starter serveren
-└── package.json         # dependencies
+<img width="476" height="367" alt="image" src="https://github.com/user-attachments/assets/1d0a959b-4b55-4098-9ddd-a84508d90a42" />
+
 
 Vi har valgt at gå med MVC modellen da vi tidligere har anvendt den, samt giver det også en god ansvarsopdeling så man kan nemt danne sig et overblik og opdele koden som giver en lav kobling mellem modulerne.
 
