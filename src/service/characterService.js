@@ -38,7 +38,7 @@ async function createCharacter(character){
 }
 
 // Opdaterer en eksisterende karakter:
-    async function updateCharacter (id, newCharacter){
+async function updateCharacter (id, newCharacter){
        try {
            const characters = await getAllCharacters();
            // Finder karakteren ud fra id:
@@ -64,7 +64,7 @@ async function createCharacter(character){
        } catch(err){
            throw err;
        }
-};
+}
 
 // Sletter en karakter:
 async function deleteCharacter (id) {
@@ -73,7 +73,9 @@ async function deleteCharacter (id) {
         const updatedCharList = characters.filter(c => c.id !== id);
 
         if (updatedCharList.length === characters.length) {
-            new Error(`No characters found.`);
+            const error = new Error(`No characters found.`);
+            error.code = "CHARACTER_NOT_FOUND";
+            throw error;
         }
 
         await fs.writeJson(characterPath, updatedCharList, {spaces: 2});

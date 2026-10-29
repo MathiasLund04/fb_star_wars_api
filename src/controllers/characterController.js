@@ -144,9 +144,10 @@ const deleteCharacter = async (req, res) => {
         // Returnerer status 204 hvis karakteren blev slettet:
         res.status(204).send();
     }catch(err) {
-        res.status(500).send({
-            error: err,
-        })
+        if (err.code === "CHARACTER_NOT_FOUND") {
+            return res.status(404).json({ error: "Karakter ikke fundet" });
+        }
+        res.status(500).send({ error: err.message });
     }
 };
 
