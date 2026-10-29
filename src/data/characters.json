@@ -2,7 +2,7 @@
   {
     "id": "0167e0f7-c4b4-49da-acb3-bf6f05814fc6",
     "name": "Leia Organa",
-    "role": "rebel",
+    "role": "Rebel",
     "homeworld": "Alderaan"
   },
   {
@@ -24,9 +24,27 @@
     "homeworld": "Mustafar"
   },
   {
+    "id": "e51225a6-56e4-4fef-8a04-74e7d3bb62e1",
+    "name": "Obi-Wan Kenobi",
+    "role": "Jedi",
+    "homeworld": "Stewjon"
+  },
+  {
+    "id": "bd9b6600-66d8-428c-b2df-e9f9022a44b0",
+    "name": "Yoda",
+    "role": "Jedi",
+    "homeworld": "Dagobah"
+  },
+  {
+    "id": "034c3edf-792c-4a06-be09-ef25be9366aa",
+    "name": "Admiral Ackbar",
+    "role": "Rebel",
+    "homeworld": "mon calamari"
+  },
+  {
     "id": "a633819d-3060-4a77-801f-b60460c30d41",
     "name": "Chewbacca",
-    "role": "rebel",
+    "role": "Smuggler",
     "homeworld": "Kashyyyk"
   }
 ]

@@ -7,21 +7,19 @@ const filePath = path.join(
 const characterService = require("../service/characterService");
 
 // Returnerer alle karakterer:
-const getAllCharacters = async (req, res) => {
+const getAllCharacters = async (req, res, next) => {
     try {
         const characters = await characterService.getAllCharacters();
         res.json(
             characters
         );
     }catch(err) {
-        res.status(500).send({
-            error: err,
-        })
+        next(err);
     }
 };
 
 // Returnerer en karakter ud fra et id:
-const getCharacterById = async (req, res) => {
+const getCharacterById = async (req, res, next) => {
         const id = req.params.id;
         try {
             // Henter en karakter fra servicen:
@@ -39,9 +37,7 @@ const getCharacterById = async (req, res) => {
             res.json(character);
 
         }catch(err) {
-            res.status(500).send({
-                error: err,
-            })
+            next(err);
         }
 };
 
@@ -53,22 +49,6 @@ const createCharacter = (req, res,next) => {
            role,
            homeworld
        } = req.body || {};
-
-       // Validerer brugerens input data:
-       if (
-           typeof name !== "string" ||
-           typeof role !== "string" ||
-           typeof homeworld !== "string" ||
-           name.trim().length < 3 ||
-           role.trim().length < 3 ||
-           homeworld.trim().length < 3
-       ) {
-
-           // Returnere en fejl hvis input ikke opfylder kravene:
-           return res.status(400).json({
-               error: "Navn, rang og hjemmeverden skal indeholde mindst 3 tegn"
-           });
-       }
 
        // Opretter den nye karakter:
        const newCharacter =
@@ -92,22 +72,6 @@ try {
         role,
         homeworld
     } = req.body || {};
-
-    // Validerer brugerens input data:
-    if (
-        typeof name !== "string" ||
-        typeof role !== "string" ||
-        typeof homeworld !== "string" ||
-        name.trim().length < 3 ||
-        role.trim().length < 3 ||
-        homeworld.trim().length < 3
-    ) {
-
-        // Returnere en fejl hvis input ikke opfylder kravene:
-        return res.status(400).json({
-            error: "Navn, rolle og hjemmeverden skal indeholde mindst 3 tegn"
-        });
-    }
 
     // Opdaterer karakteren via servicen
     const character =
@@ -133,7 +97,7 @@ try {
 
 
 // Sletter en karakter:
-const deleteCharacter = async (req, res) => {
+const deleteCharacter = async (req, res, next) => {
     try {
         // Henter id'et fra URL'en:
         const id = req.params.id;
@@ -145,25 +109,20 @@ const deleteCharacter = async (req, res) => {
         res.status(204).send();
     }catch(err) {
         if (err.code === "CHARACTER_NOT_FOUND") {
-            return res.status(404).json({ error: "Karakter ikke fundet" });
+            err.status = 404;
+            err.message = "karakter ikke fundet"
         }
-        res.status(500).send({ error: err.message });
+        next(err)
     }
 };
 
 //downloader txt filen
-const downloadFile = (req, res) => {
-    res.download(filePath, "rebel-alliance.txt", (error) => {
+const downloadFile = (req, res, next) => {
+    res.download(filePath, "rebel-alliance.txt", (err) => {
         //Hvis der sker fejl undervejs vises dette i konsollen
-        if (error) {
-            console.log(error);
-
-            //For at vise fejl til bruger hvis der ikke sker noget
-            if (!res.headersSent) {
-                res.status(500).send("Kunne ikke hente filen");
-            }
+        if (err) {
+            next(err);
         }
-
     });
 }
 

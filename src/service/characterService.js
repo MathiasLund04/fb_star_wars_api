@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs-extra');
 const path = require('path');
-const characterService = require("./characterService");
 const characterPath = path.join(__dirname,`../data/characters.json`);
 
 // Henter alle karakterer:
@@ -24,14 +23,15 @@ async function getCharacterById(id){
 async function createCharacter(character){
     const newCharacter = {
         id: crypto.randomUUID(),
-        name: character.name.trim(),
-        role: character.role.trim(),
-        homeworld: character.homeworld.trim(),
+        name: character.name,
+        role: character.role,
+        homeworld: character.homeworld
     };
     try{
         const characters = await getAllCharacters();
         characters.push(newCharacter);
         await fs.writeJson(characterPath, characters, {spaces: 2});
+        return newCharacter;
     } catch(err){
        throw err;
     }
@@ -50,9 +50,9 @@ async function updateCharacter (id, newCharacter){
            // Opdaterer karakterens oplysninger:
            character = {
                id: id,
-               name: newCharacter.name.trim(),
-               role: newCharacter.role.trim(),
-               homeworld: newCharacter.homeworld.trim(),
+               name: newCharacter.name,
+               role: newCharacter.role,
+               homeworld: newCharacter.homeworld
            };
            const updatedCharacters = characters.filter(c => c.id !== id);
            updatedCharacters.push(character);
