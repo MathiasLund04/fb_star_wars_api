@@ -22,19 +22,6 @@ Den gør det nemt at holde overblik af den opdelte kode igennem den vigtige ansv
 
 ## Opdeling:
 
-Vores struktur (MVC-modellen):
-projektmappe/
-├── files/              # statiske filer (fx .txt)
-├── src/
-│   ├── controllers/     # forretningslogik i Service
-│   ├── routes/          # ruter
-│   ├── public/           # HTML-filer
-│   ├── middleware/      # logning, validering
-│   ├── data/      # værdier der gemmes, modeller
-│   └── app.js           # Express-app
-├── server.js            # starter serveren
-└── package.json         # dependencies
-
 ### Opstart af server
 For at bruge programmet, skal man starte servern i server.js. Derefter kan man bruge ens webbrowser til at tilgå server i http://localhost:3000 hvor man ville få vist de forskellige funktioner dette program udgiver.
 
