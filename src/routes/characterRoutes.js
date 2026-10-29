@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const {validateCharacterMiddleware, validateCharacter} = require("../middleware/validateCharacter");
 const characterController = require(
     "../controllers/characterController"
 );
@@ -20,12 +21,14 @@ router.get(
 // Ruten når en ny karakter er oprettet:
 router.post(
     "/characters",
+    validateCharacterMiddleware,
     characterController.createCharacter
 );
 
 // Ruten når en karakter bliver ændret:
 router.put(
     "/characters/:id",
+    validateCharacterMiddleware,
     characterController.updateCharacter
 );
 

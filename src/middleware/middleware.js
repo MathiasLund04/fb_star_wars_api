@@ -17,9 +17,16 @@ const notFoundHandler = (req, res) => {
 
 //Centrale fejlhåndtering for fejl, sender et passende svar tilbage til klienten.
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack || err.message);
+    if (res.headersSent) {
+        return next(err);
+    }
 
-    const statusCode = err.status || err.statusCode || 500;
+    console.error(err.stack || err.message);
+    const candidateStatus = err.status || err.statusCode;
+
+    const statusCode = Number.isInteger(candidateStatus) && candidateStatus >= 400 && candidateStatus <= 599
+    ? candidateStatus
+        : 500;
 
     res.status(statusCode).json({
         error: statusCode >= 500
