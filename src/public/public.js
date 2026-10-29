@@ -11,7 +11,7 @@ async function getErrorMessage(response, fallback) {
     return data.error || (typeof data.errors === 'string' ? data.errors : null) || fallback;
 }
 
-async function hentCharacters() {
+async function getCharacters() {
     try {
         const response = await fetch('/characters');
 
@@ -74,7 +74,7 @@ async function deleteCharacter(id) {
             throw new Error(await getErrorMessage(response, 'Karakteren kunne ikke slettes'));
         }
 
-        await hentCharacters();
+        await getCharacters();
     } catch (error) {
         alert(error.message);
     }
@@ -170,7 +170,7 @@ if (updateForm) {
 }
 
 if (characterList) {
-    hentCharacters().then(() => {}).catch(error => console.error('Error fetching characters:', error));
+    getCharacters().then(() => {}).catch(error => console.error('Error fetching characters:', error));
 }
 
 const rebelPopup = document.getElementById('rebel-popup');
