@@ -1,0 +1,156 @@
+const characterList = document.getElementById('character-list');
+
+async function hentCharacters() {
+    try {
+        const response = await fetch('/characters');
+
+        if (!response.ok) {
+            throw new Error('Kunne ikke hente karakterer');
+        }
+
+        const characters = await response.json();
+        characterList.innerHTML = '';
+
+        characters.forEach(character => {
+            const listItem = document.createElement('div');
+
+            const name = document.createElement('h2');
+            name.textContent = character.name;
+
+            const role = document.createElement('p');
+            role.textContent = `Role: ${character.role}`;
+
+            const homeworld = document.createElement('p');
+            homeworld.textContent = `Homeworld: ${character.homeworld}`;
+
+            const updateButton = document.createElement('button');
+            updateButton.textContent = 'Update';
+            updateButton.addEventListener('click', () => {
+                window.location.href = `/update.html?id=${character.id}`;
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('delete');
+            deleteButton.addEventListener('click', () => {
+                deleteCharacter(character.id);
+            });
+
+            listItem.appendChild(name);
+            listItem.appendChild(role);
+            listItem.appendChild(homeworld);
+            listItem.appendChild(updateButton);
+            listItem.appendChild(deleteButton);
+
+            characterList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteCharacter(id) {
+    if (!confirm('Er du sikker på, at karakteren skal slettes?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/characters/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Karakteren kunne ikke slettes');
+        }
+
+        await hentCharacters();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const createForm = document.getElementById('create-character-form');
+
+if (createForm) {
+    createForm.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const role = document.getElementById('role').value.trim();
+        const homeworld = document.getElementById('homeworld').value.trim();
+
+        const response = await fetch('/characters', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                role,
+                homeworld
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Kunne ikke oprette karakteren');
+        }
+
+        window.location.href = '/';
+    });
+}
+
+const updateForm = document.getElementById('update-character-form');
+
+if (updateForm) {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+        throw new Error('Mangler karakter-ID');
+    }
+
+    fetch(`/characters/${id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Kunne ikke hente karakteren');
+            }
+
+            return response.json();
+        })
+        .then(character => {
+            document.getElementById('name').value = character.name;
+            document.getElementById('role').value = character.role;
+            document.getElementById('homeworld').value = character.homeworld;
+        })
+        .catch(error => console.error(error));
+
+    updateForm.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const role = document.getElementById('role').value.trim();
+        const homeworld = document.getElementById('homeworld').value.trim();
+
+        const response = await fetch(`/characters/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                role,
+                homeworld
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Kunne ikke opdatere karakteren');
+        }
+
+        window.location.href = '/';
+    });
+}
+
+if (characterList) {
+    hentCharacters().then(r => {}).catch(error => console.error('Error fetching characters:', error));
+}
