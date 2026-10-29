@@ -7,96 +7,113 @@ const filePath = path.join(
 const characterService = require("../service/characterService");
 
 // Returnerer alle karakterer:
-const getAllCharacters = (req, res) => {
-    res.json(
-        characterService.getAllCharacters()
-    );
+const getAllCharacters = async (req, res) => {
+    try {
+        const characters = await characterService.getAllCharacters();
+        res.json(
+            characters
+        );
+    }catch(err) {
+        res.status(500).send({
+            error: err,
+        })
+    }
 };
 
 // Returnerer en karakter ud fra et id:
-const getCharacterById = (req, res) => {
-        const id = parseInt(req.params.id);
+const getCharacterById = async (req, res) => {
+        const id = req.params.id;
+        try {
+            // Henter en karakter fra servicen:
+            const character = await
+                characterService.getCharacterById(id);
 
-        // Henter en karakter fra servicen:
-        const character =
-            characterService.getCharacterById(id);
+            // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
+            if (!character) {
+                return res.status(404).json({
+                    error: "Karakter ikke fundet"
+                });
+            }
 
-        // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
-        if (!character) {
-            return res.status(404).json({
-                error: "Karakter ikke fundet"
-            });
+            // Returnere den fundne karakter:
+            res.json(character);
+
+        }catch(err) {
+            res.status(500).send({
+                error: err,
+            })
         }
-
-        // Returnere den fundne karakter:
-        res.json(character);
-
 };
 
 // Opretter en ny karakter:
-const createCharacter = (req, res) => {
-    const { name, rank, homeworld } = req.body || {};
+const createCharacter = (req, res,next) => {
+   try {
+       const character = {
+           name,
+           role,
+           homeworld
+       } = req.body || {};
+
+       // Validerer brugerens input data:
+       if (
+           typeof name !== "string" ||
+           typeof role !== "string" ||
+           typeof homeworld !== "string" ||
+           name.trim().length < 3 ||
+           role.trim().length < 3 ||
+           homeworld.trim().length < 3
+       ) {
+
+           // Returnere en fejl hvis input ikke opfylder kravene:
+           return res.status(400).json({
+               error: "Navn, rang og hjemmeverden skal indeholde mindst 3 tegn"
+           });
+       }
+
+       // Opretter den nye karakter:
+       const newCharacter =
+           characterService.createCharacter(character)
+               .then(newCharacter => res.status(201).json(newCharacter))
+               .catch(next);
+   }catch(err) {
+       next(err)
+   }
+   };
+
+// Ændring af karakter:
+const updateCharacter = async (req, res, next) => {
+try {
+    // Henter id'et fra URL'en:
+    const id = req.params.id;
+
+    // Henter de nye værdier fra request body:
+    const newCharacter = {
+        name,
+        role,
+        homeworld
+    } = req.body || {};
 
     // Validerer brugerens input data:
     if (
         typeof name !== "string" ||
-        typeof rank !== "string" ||
+        typeof role !== "string" ||
         typeof homeworld !== "string" ||
         name.trim().length < 3 ||
-        rank.trim().length < 3 ||
+        role.trim().length < 3 ||
         homeworld.trim().length < 3
     ) {
 
         // Returnere en fejl hvis input ikke opfylder kravene:
         return res.status(400).json({
-            error: "Navn, rang og hjemmeverden skal indeholde mindst 3 tegn"
+            error: "Navn, rolle og hjemmeverden skal indeholde mindst 3 tegn"
         });
     }
 
-    // Opretter den nye karakter:
-    const newCharacter =
-        characterService.createCharacter(
-            name.trim(),
-            rank.trim(),
-            homeworld.trim()
-        );
-
-    // Returnerer den oprettede karakter med status 201 (Created):
-    res.status(201).json(newCharacter);
-};
-
-// Ændring af karakter:
-const updateCharacter = (req, res) => {
-
-    // Henter id'et fra URL'en:
-    const id = parseInt(req.params.id);
-
-    // Henter de nye værdier fra request body:
-    const { name, rank, homeworld } = req.body || {};
-
-        // Validerer brugerens input data:
-        if (
-            typeof name !== "string" ||
-            typeof rank !== "string" ||
-            typeof homeworld !== "string" ||
-            name.trim().length < 3 ||
-            rank.trim().length < 3 ||
-            homeworld.trim().length < 3
-        ) {
-
-            // Returnere en fejl hvis input ikke opfylder kravene:
-            return res.status(400).json({
-                error: "Navn, rang og hjemmeverden skal indeholde mindst 3 tegn"
-            });
-        }
-
     // Opdaterer karakteren via servicen
     const character =
-        characterService.updateCharacter(
+        await characterService.updateCharacter(
             id,
-            name.trim(),
-            rank.trim(),
-            homeworld.trim()
+            newCharacter
         );
 
     // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
@@ -108,28 +125,30 @@ const updateCharacter = (req, res) => {
 
     // Returnerer den opdaterede karakter:
     res.json(character);
+}catch(err) {
+    next(err);
+}
+
 };
 
 
 // Sletter en karakter:
-const deleteCharacter = (req, res) => {
+const deleteCharacter = async (req, res) => {
+    try {
+        // Henter id'et fra URL'en:
+        const id = req.params.id;
 
-    // Henter id'et fra URL'en:
-    const id = parseInt(req.params.id);
+        // Forsøger at slette karakteren via servicen:
+            await characterService.deleteCharacter(id);
 
-    // Forsøger at slette karakteren via servicen:
-    const deleted =
-        characterService.deleteCharacter(id);
-
-    // Returnere en fejlkode(404) hvis karakteren ikke kan findes:
-    if (!deleted) {
-        return res.status(404).json({
-            error: "Karakter ikke fundet"
-        });
+        // Returnerer status 204 hvis karakteren blev slettet:
+        res.status(204).send();
+    }catch(err) {
+        if (err.code === "CHARACTER_NOT_FOUND") {
+            return res.status(404).json({ error: "Karakter ikke fundet" });
+        }
+        res.status(500).send({ error: err.message });
     }
-
-    // Returnerer status 204 hvis karakteren blev slettet:
-    res.status(204).send();
 };
 
 //downloader txt filen
@@ -150,7 +169,7 @@ const downloadFile = (req, res) => {
 
 //redirecter til characters/1 (eller Lukes id i dette tilfælde)
 const goToLuke = (req, res) => {
-    res.redirect("/characters/1");
+    res.redirect("/characters/8ab3847c-9aa0-46d4-a9b2-4bde5a137455");
 }
 
 

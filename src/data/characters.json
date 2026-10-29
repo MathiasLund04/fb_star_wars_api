@@ -1,0 +1,32 @@
+[
+  {
+    "id": "0167e0f7-c4b4-49da-acb3-bf6f05814fc6",
+    "name": "Leia Organa",
+    "role": "rebel",
+    "homeworld": "Alderaan"
+  },
+  {
+    "id": "8ab3847c-9aa0-46d4-a9b2-4bde5a137455",
+    "name": "Luke Skywalker",
+    "role": "Jedi",
+    "homeworld": "Tatooine"
+  },
+  {
+    "id": "cd99531c-e2f2-49f6-90e4-4f4410681b62",
+    "name": "Han Solo",
+    "role": "Smuggler",
+    "homeworld": "Corellia"
+  },
+  {
+    "id": "2b58b4d1-d374-449e-a86e-3b0f9d8f064c",
+    "name": "Darth Vader",
+    "role": "Sith",
+    "homeworld": "Mustafar"
+  },
+  {
+    "id": "a633819d-3060-4a77-801f-b60460c30d41",
+    "name": "Chewbacca",
+    "role": "rebel",
+    "homeworld": "Kashyyyk"
+  }
+]
