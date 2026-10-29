@@ -8,4 +8,3 @@ Vigtige medlemmer: Luke Skywalker, Han Solo, Chewbacca
 
 Må Kraften være med jer!
 
-// få implementeret at hent teksten og vise det inden i en HTML-side

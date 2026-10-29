@@ -154,3 +154,34 @@ if (updateForm) {
 if (characterList) {
     hentCharacters().then(() => {}).catch(error => console.error('Error fetching characters:', error));
 }
+
+const rebelPopup = document.getElementById('rebel-popup');
+const rebelText = document.getElementById('rebel-text');
+const closePopup = document.getElementById('close-popup');
+const popupClosedKey = 'rebel-popup-closed';
+
+if (
+    rebelPopup &&
+    rebelText &&
+    closePopup &&
+    !sessionStorage.getItem(popupClosedKey)
+) {
+    fetch('/download')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Kunne ikke hente rebel-alliance.txt');
+            }
+
+            return response.text();
+        })
+        .then(text => {
+            rebelText.textContent = text;
+            rebelPopup.hidden = false;
+        })
+        .catch(error => console.error(error));
+
+    closePopup.addEventListener('click', () => {
+        rebelPopup.hidden = true;
+        sessionStorage.setItem(popupClosedKey, 'true');
+    });
+}
